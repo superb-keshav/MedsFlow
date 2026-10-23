@@ -77,7 +77,7 @@ export const ProductDetailModal = () => {
               </span>
               {selectedMedicine.expressDelivery && (
                 <span className="text-xs font-bold px-2 py-1 rounded-md bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 flex items-center gap-1">
-                  <Zap size={12} fill="currentColor" /> 18m Delivery
+                  <Zap size={12} fill="currentColor" /> Fast Dispatch
                 </span>
               )}
             </div>

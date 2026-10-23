@@ -29,7 +29,7 @@ export const PincodeModal = () => {
     setPincode(loc.pin);
     setLocationName(loc.area);
     setDeliveryEta(loc.eta);
-    showToast(`Delivery location set to ${loc.area} (⚡ ${loc.eta}m ETA)`);
+    showToast(`Delivery location set to ${loc.area}`);
     setIsPincodeModalOpen(false);
   };
 
@@ -39,7 +39,7 @@ export const PincodeModal = () => {
       setPincode(inputPin);
       setLocationName(`Delivery Zone (${inputPin})`);
       setDeliveryEta(18);
-      showToast(`Pincode updated to ${inputPin} (⚡ 18m Express Available)`);
+      showToast(`Pincode updated to ${inputPin} (Serviceable Zone)`);
       setIsPincodeModalOpen(false);
     } else {
       showToast('Please enter a valid 6-digit postal code', 'error');
@@ -93,7 +93,7 @@ export const PincodeModal = () => {
         {/* Popular Cities */}
         <div className="space-y-2">
           <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            Popular Express Delivery Zones:
+            Popular Serviceable Delivery Zones:
           </p>
           <div className="space-y-1.5 max-h-60 overflow-y-auto">
             {popularLocations.map((loc) => {
@@ -114,7 +114,7 @@ export const PincodeModal = () => {
                         {loc.pin}
                       </span>
                       <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
-                        <Zap size={10} fill="currentColor" /> {loc.eta} Mins
+                        <Check size={12} /> Available
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">

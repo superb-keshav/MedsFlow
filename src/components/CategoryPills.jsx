@@ -15,16 +15,16 @@ export const CategoryPills = () => {
 
   const filterTabs = [
     { id: 'all', label: 'All Items', icon: null },
-    { id: 'express', label: '⚡ 18m Express', icon: Zap },
+    { id: 'express', label: '⚡ Fast Dispatch', icon: Zap },
     { id: 'discount', label: 'Top Offers (>25% Off)', icon: Sparkles },
   ];
 
   return (
-    <section className="py-3 sticky top-[73px] z-30 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
-      <div className="app-container space-y-3">
+    <section className="py-2.5 sm:py-3 sticky top-[108px] md:top-[74px] z-30 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+      <div className="app-container space-y-2 sm:space-y-3">
         
         {/* Category Carousel Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
@@ -34,7 +34,7 @@ export const CategoryPills = () => {
                   setSelectedCategory(cat.id);
                   setSearchQuery('');
                 }}
-                className={`flex-shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                className={`flex-shrink-0 flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
                   isSelected
                     ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-[1.02]'
                     : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-teal-400 hover:text-teal-600 dark:hover:text-teal-400'
@@ -58,10 +58,10 @@ export const CategoryPills = () => {
         </div>
 
         {/* Quick Filter Badges Row */}
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
-              <Filter size={12} /> Filter:
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="text-[11px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
+              <Filter size={11} /> Filter:
             </span>
             {filterTabs.map((tab) => {
               const isActive = activeFilter === tab.id;
@@ -70,7 +70,7 @@ export const CategoryPills = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveFilter(tab.id)}
-                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
                     isActive
                       ? 'bg-teal-100 dark:bg-teal-950/80 text-teal-900 dark:text-teal-200 border border-teal-400/40 font-bold'
                       : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60'
@@ -83,7 +83,7 @@ export const CategoryPills = () => {
             })}
           </div>
 
-          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
             Showing <strong className="text-slate-800 dark:text-white">
               {medicines.filter((m) => {
                 if (selectedCategory !== 'all' && m.category !== selectedCategory) return false;
