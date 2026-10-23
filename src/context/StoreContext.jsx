@@ -5,7 +5,7 @@ import confetti from 'canvas-confetti';
 
 const StoreContext = createContext();
 
-const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const API_BASE = (import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? '' : 'https://medsflow.onrender.com')).replace(/\/+$/, '');
 
 export const StoreProvider = ({ children }) => {
   // Theme state
