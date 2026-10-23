@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti';
 
 const StoreContext = createContext();
 
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+
 export const StoreProvider = ({ children }) => {
   // Theme state
   const [darkMode, setDarkMode] = useState(() => {
@@ -32,13 +34,13 @@ export const StoreProvider = ({ children }) => {
   // Verify stored token on load
   useEffect(() => {
     if (adminToken) {
-      fetch('/api/admin/verify', {
+      fetch(`${API_BASE}/api/admin/verify`, {
         headers: { Authorization: `Bearer ${adminToken}` }
       })
         .then((res) => {
           if (res.ok) {
             setIsAdminAuthenticated(true);
-          } else {
+          } else if (res.status === 401 || res.status === 403) {
             // Token invalid or expired
             localStorage.removeItem('medsflow_admin_token');
             setAdminToken(null);
@@ -63,7 +65,7 @@ export const StoreProvider = ({ children }) => {
   // Admin Login method (Username: admin, Password: admin123)
   const adminLogin = async (username, password) => {
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: username.trim(), password })
@@ -76,12 +78,24 @@ export const StoreProvider = ({ children }) => {
         setIsAdminAuthenticated(true);
         showToast('Welcome, Administrator! Access Granted', 'success');
         return { success: true };
-      } else {
-        const errData = await res.json().catch(() => ({}));
-        const errMsg = errData.error || 'Invalid credentials. Use admin / admin123';
-        showToast(errMsg, 'error');
-        return { success: false, error: errMsg };
       }
+
+      // If Netlify returns 404/405 (meaning backend proxy is not yet linked) or 502/503 (Render cold start)
+      if (res.status === 404 || res.status === 405 || res.status >= 500) {
+        if (username.trim() === 'admin' && password === 'admin123') {
+          const mockToken = 'mock_jwt_token_admin_authorized_' + Date.now();
+          localStorage.setItem('medsflow_admin_token', mockToken);
+          setAdminToken(mockToken);
+          setIsAdminAuthenticated(true);
+          showToast('Welcome, Administrator! (Fallback Mode)', 'success');
+          return { success: true };
+        }
+      }
+
+      const errData = await res.json().catch(() => ({}));
+      const errMsg = errData.error || 'Invalid credentials. Use admin / admin123';
+      showToast(errMsg, 'error');
+      return { success: false, error: errMsg };
     } catch {
       // Fallback local authentication if backend is not yet reached
       if (username.trim() === 'admin' && password === 'admin123') {
@@ -115,7 +129,7 @@ export const StoreProvider = ({ children }) => {
   const fetchBackendMedicines = async () => {
     setIsLoadingMeds(true);
     try {
-      const res = await fetch('/api/medicines');
+      const res = await fetch(`${API_BASE}/api/medicines`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -334,7 +348,7 @@ export const StoreProvider = ({ children }) => {
 
     if (backendConnected) {
       try {
-        const res = await fetch(`/api/medicines/${medicineId}`, {
+        const res = await fetch(`${API_BASE}/api/medicines/${medicineId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -373,7 +387,7 @@ export const StoreProvider = ({ children }) => {
 
     if (backendConnected) {
       try {
-        const res = await fetch('/api/medicines', {
+        const res = await fetch(`${API_BASE}/api/medicines`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -408,7 +422,7 @@ export const StoreProvider = ({ children }) => {
 
     if (backendConnected) {
       try {
-        await fetch(`/api/medicines/${medicineId}`, {
+        await fetch(`${API_BASE}/api/medicines/${medicineId}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${adminToken}`
