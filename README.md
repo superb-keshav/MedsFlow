@@ -76,33 +76,6 @@
 - Real-time inventory overview: total catalog count, low-stock alerts, total valuation, and out-of-stock warnings.
 - Complete CRUD controls: Add new medicines with custom salt, disease tags, pricing, and stock count; edit existing pricing/stock; and delete discontinued items.
 
----
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    User([Customer / Patient]) -->|Browse / Search / Cart / QR Pay| ReactClient[React 19 + Tailwind v4 + Lucide UI]
-    AdminUser([Store Administrator]) -->|JWT Login / Manage Stock| ReactClient
-    
-    subgraph Frontend Application
-        ReactClient --> StoreCtx[Store Context & Local State Engine]
-        StoreCtx --> UIComponents[Navbar | ProductCard | Modals | CartDrawer]
-    end
-    
-    subgraph Express Backend API
-        UIComponents -->|REST API Requests| ExpressServer[Express.js 5.x Server :5000]
-        ExpressServer --> AuthMW[JWT Authentication Middleware]
-        ExpressServer --> MedRoutes[Medicine & Stock Controllers]
-        ExpressServer --> ExpiryRoutes[Expiry & Low-Stock Alerts]
-    end
-    
-    subgraph Database
-        AuthMW --> Mongo[(MongoDB / Mongoose ODM)]
-        MedRoutes --> Mongo
-        ExpiryRoutes --> Mongo
-    end
-```
 
 ---
 
