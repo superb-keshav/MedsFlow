@@ -11,8 +11,6 @@ import {
   Database,
   Moon,
   Sun,
-  SunDim,
-  Check,
   ShieldCheck,
   HeartPulse,
   ChevronRight,
@@ -37,7 +35,7 @@ export const Navbar = () => {
     selectedCategory,
     theme,
     setTheme,
-    cycleTheme,
+    toggleTheme,
     darkMode,
     setDarkMode,
     backendConnected,
@@ -46,19 +44,7 @@ export const Navbar = () => {
 
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const searchRef = useRef(null);
-  const themeMenuRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (themeMenuRef.current && !themeMenuRef.current.contains(e.target)) {
-        setIsThemeMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   // Close search suggestions on outside click
   useEffect(() => {
@@ -273,81 +259,15 @@ export const Navbar = () => {
                 <Database size={16} />
               </button>
 
-              {/* Theme Switcher Popover */}
-              <div className="relative" ref={themeMenuRef}>
-                <button
-                  onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-                  className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center"
-                  title={`Current theme: ${theme === 'off-white' ? 'Off-White' : theme === 'dark' ? 'Dark' : 'Light'}`}
-                  aria-label="Select appearance theme"
-                >
-                  {theme === 'off-white' ? (
-                    <SunDim size={16} className="text-amber-700/80 dark:text-amber-400" />
-                  ) : theme === 'dark' ? (
-                    <Moon size={16} />
-                  ) : (
-                    <Sun size={16} />
-                  )}
-                </button>
-
-                {isThemeMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-44 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 text-xs font-medium space-y-0.5">
-                    <button
-                      onClick={() => {
-                        setTheme('light');
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg transition-colors ${
-                        theme === 'light'
-                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Sun size={14} className="text-slate-500" />
-                        <span>Pure Light</span>
-                      </div>
-                      {theme === 'light' && <Check size={13} className="text-teal-600 dark:text-teal-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setTheme('off-white');
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg transition-colors ${
-                        theme === 'off-white'
-                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <SunDim size={14} className="text-amber-700" />
-                        <span>Warm Off-White</span>
-                      </div>
-                      {theme === 'off-white' && <Check size={13} className="text-teal-600 dark:text-teal-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setTheme('dark');
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg transition-colors ${
-                        theme === 'dark'
-                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Moon size={14} className="text-slate-400" />
-                        <span>Dark Graphite</span>
-                      </div>
-                      {theme === 'dark' && <Check size={13} className="text-teal-600 dark:text-teal-400" />}
-                    </button>
-                  </div>
-                )}
-              </div>
+              {/* Theme Toggle: Light (Warm Off-White) <-> Dark */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center"
+                title={darkMode ? 'Switch to light theme' : 'Switch to dark theme'}
+                aria-label="Toggle theme"
+              >
+                {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
 
               {/* Cart Button */}
               <button
@@ -516,11 +436,11 @@ export const Navbar = () => {
                 <p className="text-[11px] font-mono uppercase tracking-wider text-slate-400 px-2">
                   Theme
                 </p>
-                <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs">
+                <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs">
                   <button
                     onClick={() => setTheme('light')}
-                    className={`py-1.5 px-2 rounded-md font-medium flex items-center justify-center gap-1 transition-colors ${
-                      theme === 'light'
+                    className={`py-1.5 px-2 rounded-md font-medium flex items-center justify-center gap-1.5 transition-colors ${
+                      !darkMode
                         ? 'bg-white text-slate-900 shadow-xs'
                         : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
@@ -529,20 +449,9 @@ export const Navbar = () => {
                     <span>Light</span>
                   </button>
                   <button
-                    onClick={() => setTheme('off-white')}
-                    className={`py-1.5 px-2 rounded-md font-medium flex items-center justify-center gap-1 transition-colors ${
-                      theme === 'off-white'
-                        ? 'bg-white text-slate-900 shadow-xs'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <SunDim size={13} />
-                    <span>Off-white</span>
-                  </button>
-                  <button
                     onClick={() => setTheme('dark')}
-                    className={`py-1.5 px-2 rounded-md font-medium flex items-center justify-center gap-1 transition-colors ${
-                      theme === 'dark'
+                    className={`py-1.5 px-2 rounded-md font-medium flex items-center justify-center gap-1.5 transition-colors ${
+                      darkMode
                         ? 'bg-slate-900 dark:bg-slate-700 text-white shadow-xs'
                         : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}

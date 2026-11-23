@@ -7,39 +7,36 @@ const StoreContext = createContext();
 const API_BASE = (import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? '' : 'https://medsflow.onrender.com')).replace(/\/+$/, '');
 
 export const StoreProvider = ({ children }) => {
-  // Theme state: 'light' | 'off-white' | 'dark'
+  // Strictly two themes: 'light' (warm off-white) and 'dark'
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('medsflow_theme');
-    if (saved === 'dark' || saved === 'off-white' || saved === 'light') return saved;
-    return 'off-white';
+    return saved === 'dark' ? 'dark' : 'light';
   });
 
   const darkMode = theme === 'dark';
 
-  const setDarkMode = (val) => {
-    if (typeof val === 'function') {
-      setTheme((prev) => (prev === 'dark' ? 'off-white' : 'dark'));
-    } else {
-      setTheme(val ? 'dark' : 'off-white');
-    }
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  const cycleTheme = () => {
-    setTheme((prev) => {
-      if (prev === 'light') return 'off-white';
-      if (prev === 'off-white') return 'dark';
-      return 'light';
-    });
+  const setDarkMode = (val) => {
+    if (typeof val === 'function') {
+      setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    } else {
+      setTheme(val ? 'dark' : 'light');
+    }
   };
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
     if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
       document.documentElement.classList.add('dark');
+      localStorage.setItem('medsflow_theme', 'dark');
     } else {
+      document.documentElement.setAttribute('data-theme', 'light');
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('medsflow_theme', 'light');
     }
-    localStorage.setItem('medsflow_theme', theme);
   }, [theme]);
 
   // Admin Authentication State
@@ -525,7 +522,7 @@ export const StoreProvider = ({ children }) => {
         expiryAlerts,
         theme,
         setTheme,
-        cycleTheme,
+        toggleTheme,
         darkMode,
         setDarkMode,
       }}
