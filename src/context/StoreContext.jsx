@@ -7,20 +7,40 @@ const StoreContext = createContext();
 const API_BASE = (import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? '' : 'https://medsflow.onrender.com')).replace(/\/+$/, '');
 
 export const StoreProvider = ({ children }) => {
-  // Theme state
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('medsflow_theme') === 'dark';
+  // Theme state: 'light' | 'off-white' | 'dark'
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('medsflow_theme');
+    if (saved === 'dark' || saved === 'off-white' || saved === 'light') return saved;
+    return 'off-white';
   });
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('medsflow_theme', 'dark');
+  const darkMode = theme === 'dark';
+
+  const setDarkMode = (val) => {
+    if (typeof val === 'function') {
+      setTheme((prev) => (prev === 'dark' ? 'off-white' : 'dark'));
     } else {
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('medsflow_theme', 'light');
+      setTheme(val ? 'dark' : 'off-white');
     }
-  }, [darkMode]);
+  };
+
+  const cycleTheme = () => {
+    setTheme((prev) => {
+      if (prev === 'light') return 'off-white';
+      if (prev === 'off-white') return 'dark';
+      return 'light';
+    });
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('medsflow_theme', theme);
+  }, [theme]);
 
   // Admin Authentication State
   const [adminToken, setAdminToken] = useState(() => {
@@ -503,6 +523,9 @@ export const StoreProvider = ({ children }) => {
         addNewMedicine,
         deleteMedicine,
         expiryAlerts,
+        theme,
+        setTheme,
+        cycleTheme,
         darkMode,
         setDarkMode,
       }}
