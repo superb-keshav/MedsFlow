@@ -8,7 +8,6 @@ import {
   RefreshCw,
   CheckCircle2,
   Package,
-  Layers,
   Edit2,
   Save,
   Lock,
@@ -17,8 +16,7 @@ import {
   ShieldCheck,
   User,
   LogOut,
-  Trash2,
-  Sparkles
+  Trash2
 } from 'lucide-react';
 
 export const AdminDashboardModal = () => {
@@ -79,7 +77,7 @@ export const AdminDashboardModal = () => {
     e.preventDefault();
     const success = await addNewMedicine({
       name: newName,
-      description: `Used for ${newDisease}`,
+      description: `Prescribed for ${newDisease}`,
       disease: newDisease,
       category: newCategory,
       price: Number(newPrice),
@@ -88,7 +86,7 @@ export const AdminDashboardModal = () => {
       expiryDate: newExpiry,
       salt: `${newName} Formulation`,
       rxRequired: false,
-      dosage: '1 tablet twice daily after meals'
+      dosage: 'Take as directed by physician'
     });
     if (success) {
       setNewName('');
@@ -97,44 +95,41 @@ export const AdminDashboardModal = () => {
     }
   };
 
+  const lowStockCount = medicines.filter((m) => Number(m.quantity) < 50).length;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md">
-      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 modal-animate-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs">
+      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 shadow-xl p-5 sm:p-7">
         
         {/* Close Button */}
         <button
           onClick={() => setIsAdminOpen(false)}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800 transition-colors"
+          className="absolute top-5 right-5 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          aria-label="Close"
         >
           <X size={18} />
         </button>
 
-        {/* ----------------- STATE 1: UNAUTHORIZED -> SHOW SECURE LOGIN ----------------- */}
+        {/* ----------------- STATE 1: AUTHENTICATION GATE ----------------- */}
         {!isAdminAuthenticated ? (
-          <div className="max-w-md mx-auto py-6 space-y-6">
+          <div className="max-w-sm mx-auto py-8 space-y-5">
             
-            {/* Header Badge */}
-            <div className="text-center space-y-2">
-              <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center mx-auto shadow-xl shadow-teal-500/30">
-                <Lock size={30} />
+            <div className="text-center space-y-1.5">
+              <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center mx-auto mb-3">
+                <Lock size={18} />
               </div>
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-                Admin Authentication Gate
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+                Dispensary administration
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Only authorized store personnel can inspect and add inventory stock
+                Sign in with store credentials to manage inventory stock
               </p>
             </div>
 
-            {/* Quick Fill Preset Banner */}
-            <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 text-xs flex items-center justify-between">
-              <div className="space-y-0.5">
-                <span className="font-bold text-teal-900 dark:text-teal-200 flex items-center gap-1">
-                  <Key size={13} className="text-teal-600" /> Authorized Store Credentials:
-                </span>
-                <p className="text-[11px] text-teal-700 dark:text-teal-300 font-mono">
-                  Username: <strong>admin</strong> | Password: <strong>admin123</strong>
-                </p>
+            {/* Quick Fill Helper */}
+            <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between">
+              <div className="font-mono text-[11px] text-slate-600 dark:text-slate-400">
+                User: <span className="font-semibold text-slate-900 dark:text-white">admin</span> &bull; Pass: <span className="font-semibold text-slate-900 dark:text-white">admin123</span>
               </div>
               <button
                 type="button"
@@ -142,7 +137,7 @@ export const AdminDashboardModal = () => {
                   setUsername('admin');
                   setPassword('admin123');
                 }}
-                className="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-[10px] transition-colors"
+                className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 transition-colors"
               >
                 Auto-fill
               </button>
@@ -150,382 +145,390 @@ export const AdminDashboardModal = () => {
 
             {/* Error Message */}
             {authError && (
-              <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs font-semibold text-rose-700 dark:text-rose-300 flex items-center gap-2">
-                <AlertTriangle size={15} />
+              <div className="p-2.5 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/40 text-xs text-red-700 dark:text-red-300 flex items-center gap-2">
+                <AlertTriangle size={14} className="flex-shrink-0" />
                 <span>{authError}</span>
               </div>
             )}
 
-            {/* Login Form */}
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
+            {/* Form */}
+            <form onSubmit={handleLoginSubmit} className="space-y-3.5">
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1.5 flex items-center gap-1.5">
-                  <User size={13} /> Username
+                <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                  Username
                 </label>
                 <input
                   type="text"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter administrator username"
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-medium"
+                  className="w-full text-xs p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-slate-400"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1.5 flex items-center gap-1.5">
-                  <Key size={13} /> Password
+                <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                  Password
                 </label>
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-medium font-mono"
+                  className="w-full text-xs p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-slate-400"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmittingAuth}
-                className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-black text-xs shadow-xl shadow-teal-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-2.5 px-4 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-medium text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
-                <Unlock size={16} />
-                <span>{isSubmittingAuth ? 'Verifying Credentials...' : 'Sign In as Administrator'}</span>
+                <Unlock size={14} />
+                <span>{isSubmittingAuth ? 'Verifying...' : 'Sign in'}</span>
               </button>
             </form>
 
             <p className="text-center text-[11px] text-slate-400 flex items-center justify-center gap-1">
-              <ShieldCheck size={13} className="text-teal-500" /> Protected by 256-bit JWT & MongoDB Authentication
+              <ShieldCheck size={13} /> Session authenticated with JSON Web Tokens
             </p>
 
           </div>
         ) : (
-          /* ----------------- STATE 2: AUTHORIZED ADMIN DASHBOARD ----------------- */
-          <>
-            {/* Modal Header */}
-            <div className="flex items-center justify-between flex-wrap gap-3 mb-6 border-b border-slate-200 dark:border-slate-800 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center">
-                  <Database size={22} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-black text-slate-900 dark:text-white">
-                    Store Manager & Inventory Dashboard
+          /* ----------------- STATE 2: AUTHORIZED DASHBOARD ----------------- */
+          <div className="space-y-5">
+            
+            {/* Header Row */}
+            <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    Dispensary inventory console
                   </h2>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span
-                      className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                        backendConnected
-                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
-                          : 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300'
-                      }`}
-                    >
-                      <span className="w-2 h-2 rounded-full bg-current"></span>
-                      {backendConnected ? 'Backend Connected (Port 5000)' : 'Standalone Mode'}
-                    </span>
-                    <button
-                      onClick={fetchBackendMedicines}
-                      className="text-xs text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1 font-semibold"
-                      title="Sync with MongoDB backend"
-                    >
-                      <RefreshCw size={11} /> Sync
-                    </button>
-                  </div>
+                  <span
+                    className={`inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded ${
+                      backendConnected
+                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
+                        : 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-200 dark:border-amber-800'
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {backendConnected ? 'Live MongoDB' : 'Standalone'}
+                  </span>
                 </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Real-time stock control, batch verification, and catalog updates
+                </p>
               </div>
 
-              {/* Authorized User Badge & Logout */}
-              <div className="flex items-center gap-2.5">
-                <div className="px-3 py-1.5 rounded-xl bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 flex items-center gap-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span className="font-bold text-teal-900 dark:text-teal-200">admin</span>
-                  <span className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">(Authorized)</span>
+              {/* Actions */}
+              <div className="flex items-center gap-2 text-xs">
+                <button
+                  onClick={fetchBackendMedicines}
+                  className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center gap-1.5 transition-colors"
+                  title="Sync database"
+                >
+                  <RefreshCw size={12} />
+                  <span>Sync</span>
+                </button>
+                <div className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 font-mono text-[11px] text-slate-700 dark:text-slate-300">
+                  admin
                 </div>
                 <button
                   onClick={adminLogout}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-bold transition-colors border border-rose-200 dark:border-rose-900/40"
-                  title="Sign out as administrator"
+                  className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950/30 text-slate-600 dark:text-slate-400 flex items-center gap-1 transition-colors"
                 >
-                  <LogOut size={13} />
+                  <LogOut size={12} />
                   <span>Logout</span>
                 </button>
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <div className="flex items-center gap-2 mb-4 border-b border-slate-200 dark:border-slate-800 pb-2">
+            {/* 3 Compact Stat Cards (Numbers only, unslop standard) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
+                <p className="text-xs text-slate-500 font-medium">Total catalog items</p>
+                <p className="text-2xl font-semibold font-mono text-slate-900 dark:text-white mt-1 tabular-nums">
+                  {medicines.length}
+                </p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Active formulations</p>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
+                <p className="text-xs text-slate-500 font-medium">Low stock alerts</p>
+                <p className={`text-2xl font-semibold font-mono mt-1 tabular-nums ${
+                  lowStockCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-900 dark:text-white'
+                }`}>
+                  {lowStockCount}
+                </p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Items with &lt; 50 units remaining</p>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
+                <p className="text-xs text-slate-500 font-medium">Near expiry items</p>
+                <p className={`text-2xl font-semibold font-mono mt-1 tabular-nums ${
+                  expiryAlerts.length > 0 ? 'text-red-600 dark:text-red-400' : 'text-slate-900 dark:text-white'
+                }`}>
+                  {expiryAlerts.length}
+                </p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Expiring within 90 days</p>
+              </div>
+            </div>
+
+            {/* Segmented Control Tabs */}
+            <div className="flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
               <button
                 onClick={() => setActiveTab('inventory')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${
                   activeTab === 'inventory'
-                    ? 'bg-teal-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-medium'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                Inventory Stock ({medicines.length})
+                Inventory ({medicines.length})
               </button>
               <button
                 onClick={() => setActiveTab('expiry')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${
                   activeTab === 'expiry'
-                    ? 'bg-rose-600 text-white shadow-sm'
-                    : 'text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-medium'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <AlertTriangle size={13} /> Expiry Alerts ({expiryAlerts.length})
+                Expiry alerts ({expiryAlerts.length})
               </button>
               <button
                 onClick={() => setActiveTab('add')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1 ${
                   activeTab === 'add'
-                    ? 'bg-teal-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-medium'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <Plus size={13} /> Add Medicine
+                <Plus size={12} />
+                <span>Add medicine</span>
               </button>
             </div>
 
-            {/* Tab 1: Inventory Management */}
+            {/* Tab 1: Inventory Table */}
             {activeTab === 'inventory' && (
-              <div className="space-y-2 max-h-96 overflow-y-auto">
-                <div className="grid grid-cols-12 text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 pb-1">
-                  <span className="col-span-5">Medicine & Batch</span>
-                  <span className="col-span-2">Price</span>
-                  <span className="col-span-3 text-center">Stock Quantity</span>
-                  <span className="col-span-2 text-right">Actions</span>
+              <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+                <div className="max-h-96 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-500 border-b border-slate-200 dark:border-slate-800 sticky top-0">
+                      <tr>
+                        <th className="p-3 font-medium">Medicine & formulation</th>
+                        <th className="p-3 font-medium">Batch</th>
+                        <th className="p-3 font-medium font-mono tabular-nums">Price</th>
+                        <th className="p-3 font-medium font-mono tabular-nums text-center">Stock</th>
+                        <th className="p-3 font-medium text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                      {medicines.map((med) => (
+                        <tr key={med._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                          <td className="p-3">
+                            <p className="font-medium text-slate-900 dark:text-white">{med.name}</p>
+                            <p className="text-[11px] text-slate-500 font-mono truncate max-w-xs">{med.salt || med.disease}</p>
+                          </td>
+                          <td className="p-3 font-mono text-[11px] text-slate-500">
+                            {med.batchNumber}
+                          </td>
+                          <td className="p-3 font-mono tabular-nums font-medium text-slate-900 dark:text-white">
+                            ₹{med.price}
+                          </td>
+                          <td className="p-3 text-center">
+                            {editingId === med._id ? (
+                              <div className="inline-flex items-center gap-1">
+                                <input
+                                  type="number"
+                                  value={editingQty}
+                                  onChange={(e) => setEditingQty(e.target.value)}
+                                  className="w-16 p-1 text-xs border rounded bg-white dark:bg-slate-900 text-center font-mono"
+                                />
+                                <button
+                                  onClick={() => handleStockSave(med._id)}
+                                  className="p-1 rounded bg-teal-700 text-white"
+                                  title="Save"
+                                >
+                                  <Save size={13} />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="inline-flex items-center gap-1.5 font-mono tabular-nums">
+                                <span className={`px-2 py-0.5 rounded text-[11px] ${
+                                  med.quantity < 50
+                                    ? 'bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                                    : 'text-slate-700 dark:text-slate-300'
+                                }`}>
+                                  {med.quantity}
+                                </span>
+                                <button
+                                  onClick={() => {
+                                    setEditingId(med._id);
+                                    setEditingQty(med.quantity);
+                                  }}
+                                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                                  title="Edit stock quantity"
+                                >
+                                  <Edit2 size={12} />
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                          <td className="p-3 text-right">
+                            <button
+                              onClick={() => deleteMedicine(med._id)}
+                              className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                              title="Delete item"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-
-                {medicines.map((med) => (
-                  <div
-                    key={med._id}
-                    className="grid grid-cols-12 items-center p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-xs"
-                  >
-                    <div className="col-span-5">
-                      <p className="font-bold text-slate-900 dark:text-white truncate">
-                        {med.name}
-                      </p>
-                      <p className="text-[10px] text-slate-500">
-                        Batch: {med.batchNumber} • Exp: {med.expiryDate}
-                      </p>
-                    </div>
-
-                    <div className="col-span-2 font-bold text-slate-900 dark:text-white">
-                      ₹{med.price}
-                    </div>
-
-                    <div className="col-span-3 flex items-center justify-center gap-2">
-                      {editingId === med._id ? (
-                        <div className="flex items-center gap-1">
-                          <input
-                            type="number"
-                            value={editingQty}
-                            onChange={(e) => setEditingQty(e.target.value)}
-                            className="w-16 p-1 text-xs border rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-center font-bold"
-                          />
-                          <button
-                            onClick={() => handleStockSave(med._id)}
-                            className="p-1 rounded-lg bg-teal-600 text-white"
-                            title="Save Stock"
-                          >
-                            <Save size={14} />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`font-black px-2 py-0.5 rounded-md text-xs ${
-                              med.quantity > 50
-                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
-                                : 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300'
-                            }`}
-                          >
-                            {med.quantity} units
-                          </span>
-                          <button
-                            onClick={() => {
-                              setEditingId(med._id);
-                              setEditingQty(med.quantity);
-                            }}
-                            className="p-1 text-slate-400 hover:text-teal-600 transition-colors"
-                            title="Edit stock"
-                          >
-                            <Edit2 size={13} />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="col-span-2 flex items-center justify-end">
-                      <button
-                        onClick={() => {
-                          if (confirm(`Remove ${med.name} from store catalog?`)) {
-                            deleteMedicine(med._id);
-                          }
-                        }}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
-                        title="Delete medicine"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
               </div>
             )}
 
             {/* Tab 2: Expiry Alerts */}
             {activeTab === 'expiry' && (
-              <div className="space-y-2">
+              <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden p-4 space-y-3">
+                <p className="text-xs text-slate-500">
+                  Batches nearing expiry (within 90 days). Phased out items must be marked for cold return.
+                </p>
                 {expiryAlerts.length === 0 ? (
-                  <div className="p-8 text-center text-slate-400">
-                    <CheckCircle2 size={36} className="mx-auto text-emerald-500 mb-2" />
-                    <p className="font-bold text-sm">All Batches Fresh</p>
-                    <p className="text-xs">No medicines expiring within the next 90 days.</p>
-                  </div>
+                  <p className="text-xs text-slate-400 text-center py-6 font-mono">
+                    All current batches are within valid expiration thresholds
+                  </p>
                 ) : (
-                  expiryAlerts.map((med) => (
-                    <div
-                      key={med._id}
-                      className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 flex items-center justify-between text-xs"
-                    >
-                      <div className="flex items-center gap-3">
-                        <AlertTriangle size={18} className="text-rose-600 flex-shrink-0" />
+                  <div className="space-y-2">
+                    {expiryAlerts.map((med) => (
+                      <div
+                        key={med._id}
+                        className="p-3 rounded-lg border border-red-200/80 dark:border-red-900/40 bg-red-50/40 dark:bg-red-950/20 flex items-center justify-between text-xs"
+                      >
                         <div>
-                          <p className="font-bold text-rose-950 dark:text-rose-200">
-                            {med.name}
-                          </p>
-                          <p className="text-[11px] text-rose-700 dark:text-rose-400">
-                            Batch: {med.batchNumber} • Quantity in Store: {med.quantity} units
+                          <p className="font-medium text-slate-900 dark:text-white">{med.name}</p>
+                          <p className="text-[11px] text-slate-500 font-mono">
+                            Batch {med.batchNumber} &bull; Expires: {med.expiryDate}
                           </p>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-bold text-rose-700 dark:text-rose-300 bg-rose-100 dark:bg-rose-900/60 px-2 py-0.5 rounded">
-                          Exp: {med.expiryDate}
+                        <span className="font-mono text-xs text-red-700 dark:text-red-400 font-medium">
+                          {med.quantity} units remaining
                         </span>
                       </div>
-                    </div>
-                  ))
+                    ))}
+                  </div>
                 )}
               </div>
             )}
 
-            {/* Tab 3: Add Medicine Form */}
+            {/* Tab 3: Add Medicine */}
             {activeTab === 'add' && (
-              <form onSubmit={handleAddMedicine} className="space-y-3 text-xs">
-                <div className="grid grid-cols-2 gap-3">
+              <form onSubmit={handleAddMedicine} className="border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                    <label className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
-                      Medicine Brand Name
+                    <label className="text-slate-700 dark:text-slate-300 font-medium block mb-1">
+                      Medicine brand name
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Lipitor 20mg"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      placeholder="e.g. Paracetamol 500mg"
+                      className="w-full p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
                     />
                   </div>
+
                   <div>
-                    <label className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
-                      Disease / Therapeutic Indication
+                    <label className="text-slate-700 dark:text-slate-300 font-medium block mb-1">
+                      Therapeutic condition
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Cholesterol, Cardiac Care"
                       value={newDisease}
                       onChange={(e) => setNewDisease(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      placeholder="e.g. Fever, Headache"
+                      className="w-full p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
                     />
                   </div>
-                </div>
 
-                <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
+                    <label className="text-slate-700 dark:text-slate-300 font-medium block mb-1">
                       Category
                     </label>
                     <select
                       value={newCategory}
                       onChange={(e) => setNewCategory(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
                     >
                       <option value="Fever & Pain">Fever & Pain</option>
-                      <option value="Diabetes Care">Diabetes Care</option>
-                      <option value="BP & Heart">BP & Heart</option>
-                      <option value="Stomach & Acidity">Stomach & Acidity</option>
                       <option value="Antibiotics">Antibiotics</option>
-                      <option value="Immunity & Vitamins">Immunity & Vitamins</option>
+                      <option value="Diabetes Care">Diabetes Care</option>
+                      <option value="Cardiac Care">Cardiac Care</option>
+                      <option value="Vitamins & Minerals">Vitamins & Minerals</option>
+                      <option value="First Aid">First Aid</option>
                     </select>
                   </div>
+
                   <div>
-                    <label className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
-                      Selling Price (₹)
+                    <label className="text-slate-700 dark:text-slate-300 font-medium block mb-1">
+                      Price (₹)
                     </label>
                     <input
                       type="number"
                       required
-                      placeholder="e.g. 150"
                       value={newPrice}
                       onChange={(e) => setNewPrice(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      placeholder="e.g. 45"
+                      className="w-full p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-mono"
                     />
                   </div>
+
                   <div>
-                    <label className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
-                      Initial Stock Units
+                    <label className="text-slate-700 dark:text-slate-300 font-medium block mb-1">
+                      Initial stock quantity
                     </label>
                     <input
                       type="number"
                       required
                       value={newQuantity}
                       onChange={(e) => setNewQuantity(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-mono"
                     />
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
-                      Batch Number
+                    <label className="text-slate-700 dark:text-slate-300 font-medium block mb-1">
+                      Batch number
                     </label>
                     <input
                       type="text"
                       required
                       value={newBatch}
                       onChange={(e) => setNewBatch(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
-                      Expiry Date
-                    </label>
-                    <input
-                      type="date"
-                      required
-                      value={newExpiry}
-                      onChange={(e) => setNewExpiry(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-mono"
                     />
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/30 transition-all mt-3"
-                >
-                  Authorized Add Medicine to Live Store
-                </button>
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-medium text-xs transition-colors"
+                  >
+                    Add medicine to inventory
+                  </button>
+                </div>
               </form>
             )}
-          </>
+
+          </div>
         )}
 
       </div>

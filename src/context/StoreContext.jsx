@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { initialMedicines } from '../data/mockMedicines';
 import { coupons } from '../data/healthData';
-import confetti from 'canvas-confetti';
 
 const StoreContext = createContext();
 
@@ -76,7 +75,7 @@ export const StoreProvider = ({ children }) => {
         localStorage.setItem('medsflow_admin_token', data.token);
         setAdminToken(data.token);
         setIsAdminAuthenticated(true);
-        showToast('Welcome, Administrator! Access Granted', 'success');
+        showToast('Administrator session authorized', 'success');
         return { success: true };
       }
 
@@ -87,7 +86,7 @@ export const StoreProvider = ({ children }) => {
           localStorage.setItem('medsflow_admin_token', mockToken);
           setAdminToken(mockToken);
           setIsAdminAuthenticated(true);
-          showToast('Welcome, Administrator! (Fallback Mode)', 'success');
+          showToast('Administrator session active (local)', 'success');
           return { success: true };
         }
       }
@@ -103,7 +102,7 @@ export const StoreProvider = ({ children }) => {
         localStorage.setItem('medsflow_admin_token', mockToken);
         setAdminToken(mockToken);
         setIsAdminAuthenticated(true);
-        showToast('Welcome, Administrator! (Local Auth Mode)', 'success');
+        showToast('Administrator session active (offline)', 'success');
         return { success: true };
       } else {
         showToast('Invalid credentials. Use username: admin | password: admin123', 'error');
@@ -117,7 +116,7 @@ export const StoreProvider = ({ children }) => {
     localStorage.removeItem('medsflow_admin_token');
     setAdminToken(null);
     setIsAdminAuthenticated(false);
-    showToast('Logged out of Admin Dashboard', 'info');
+    showToast('Logged out of admin dashboard', 'info');
   };
 
   // Medicines state (Synced with backend if available)
@@ -284,11 +283,7 @@ export const StoreProvider = ({ children }) => {
       return false;
     }
     setActiveCoupon(found);
-    showToast(`Coupon ${found.code} applied successfully!`, 'success');
-
-    try {
-      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
-    } catch {}
+    showToast(`Coupon ${found.code} applied`, 'success');
     return true;
   };
 
@@ -326,12 +321,7 @@ export const StoreProvider = ({ children }) => {
     clearCart();
     setIsCheckoutOpen(false);
     setIsTrackingOpen(true);
-
-    try {
-      confetti({ particleCount: 120, spread: 90, origin: { y: 0.4 } });
-    } catch {}
-
-    showToast(`Order #${order.orderId} placed successfully!`, 'success');
+    showToast(`Order #${order.orderId} confirmed`, 'success');
   };
 
   // Protected Admin Actions (Requires JWT Token)
@@ -398,7 +388,7 @@ export const StoreProvider = ({ children }) => {
         if (res.ok) {
           const data = await res.json();
           setMedicines((prev) => [data.medicine || newMed, ...prev]);
-          showToast(`Added ${newMed.name} to live store database`, 'success');
+          showToast(`Added ${newMed.name} to inventory`, 'success');
           return true;
         }
       } catch (err) {
@@ -408,7 +398,7 @@ export const StoreProvider = ({ children }) => {
 
     // Local fallback
     setMedicines((prev) => [{ ...newMed, _id: 'med_' + Date.now() }, ...prev]);
-    showToast(`Added ${newMed.name} to store catalog`, 'success');
+    showToast(`Added ${newMed.name} to catalog`, 'success');
     return true;
   };
 

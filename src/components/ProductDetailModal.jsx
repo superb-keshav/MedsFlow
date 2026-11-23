@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Clock,
-  Zap,
   Plus,
   Minus
 } from 'lucide-react';
@@ -19,22 +18,23 @@ export const ProductDetailModal = () => {
   const qty = cartItem ? cartItem.quantity : 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 modal-animate-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs">
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 shadow-xl p-5 sm:p-7">
         
         {/* Close Button */}
         <button
           onClick={() => setSelectedMedicine(null)}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800 transition-colors"
+          className="absolute top-5 right-5 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          aria-label="Close"
         >
           <X size={18} />
         </button>
 
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
           
-          {/* Left Column: Image & Quick Badges */}
+          {/* Left Column: Image & Specifications */}
           <div className="sm:col-span-5 space-y-3">
-            <div className="w-full h-56 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div className="w-full h-52 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-900 flex items-center justify-center border border-slate-200 dark:border-slate-800">
               <img
                 src={selectedMedicine.image}
                 alt={selectedMedicine.name}
@@ -45,24 +45,24 @@ export const ProductDetailModal = () => {
               />
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs space-y-2">
-              <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                <span>Batch Number:</span>
-                <strong className="text-slate-900 dark:text-white font-mono">{selectedMedicine.batchNumber}</strong>
+            <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-xs space-y-2">
+              <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                <span>Batch number:</span>
+                <span className="text-slate-900 dark:text-white font-mono font-medium">{selectedMedicine.batchNumber}</span>
               </div>
-              <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                <span>Expiry Date:</span>
-                <strong className="text-emerald-600 dark:text-emerald-400">{selectedMedicine.expiryDate}</strong>
+              <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                <span>Expiry date:</span>
+                <span className="text-slate-900 dark:text-white font-mono font-medium">{selectedMedicine.expiryDate}</span>
               </div>
-              <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+              <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
                 <span>Manufacturer:</span>
-                <strong className="text-slate-900 dark:text-white truncate max-w-[120px]">{selectedMedicine.manufacturer}</strong>
+                <span className="text-slate-900 dark:text-white truncate max-w-[120px] font-medium">{selectedMedicine.manufacturer}</span>
               </div>
-              <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                <span>Storage:</span>
-                <strong className="text-slate-900 dark:text-white">
-                  {selectedMedicine.coldChain ? '❄️ 2°C - 8°C (Cold)' : 'Store below 25°C'}
-                </strong>
+              <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                <span>Storage protocol:</span>
+                <span className="text-slate-900 dark:text-white font-medium">
+                  {selectedMedicine.coldChain ? '2°C – 8°C (Cold-chain)' : 'Below 25°C'}
+                </span>
               </div>
             </div>
           </div>
@@ -70,96 +70,93 @@ export const ProductDetailModal = () => {
           {/* Right Column: Medical Details */}
           <div className="sm:col-span-7 space-y-4">
             
-            {/* Badges */}
+            {/* Meta Strip */}
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
-                <CheckCircle2 size={13} /> 100% Genuine Pharmacy Certified
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded flex items-center gap-1">
+                <CheckCircle2 size={12} className="text-teal-600 dark:text-teal-400" />
+                <span>Pharmacy verified</span>
               </span>
-              {selectedMedicine.expressDelivery && (
-                <span className="text-xs font-bold px-2 py-1 rounded-md bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 flex items-center gap-1">
-                  <Zap size={12} fill="currentColor" /> Fast Dispatch
-                </span>
-              )}
+              <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded tabular-nums">
+                {selectedMedicine.discount}% off
+              </span>
             </div>
 
             {/* Title & Salt */}
             <div>
-              <h2 className="text-xl font-black text-slate-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                 {selectedMedicine.name}
               </h2>
-              <p className="text-xs font-semibold text-teal-700 dark:text-teal-400 mt-0.5">
-                Salt: {selectedMedicine.salt || selectedMedicine.disease}
+              <p className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">
+                Salt formulation: {selectedMedicine.salt || selectedMedicine.disease}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Package: {selectedMedicine.packageSize}
+              <p className="text-xs text-slate-500">
+                Packaging: {selectedMedicine.packageSize}
               </p>
             </div>
 
             {/* Description */}
-            <div className="p-3 rounded-xl bg-teal-50/50 dark:bg-teal-950/30 border border-teal-100 dark:border-teal-900/40 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-              <strong>Indications: </strong>{selectedMedicine.description}
+            <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+              <span className="font-medium text-slate-900 dark:text-white">Clinical indications: </span>
+              {selectedMedicine.description}
             </div>
 
-            {/* Dosage & Directions */}
+            {/* Dosage */}
             <div className="text-xs space-y-1">
-              <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
-                <Clock size={13} className="text-teal-600" /> Recommended Directions for Use:
+              <span className="font-medium text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                <Clock size={12} className="text-slate-400" /> Recommended directions
               </span>
-              <p className="text-slate-600 dark:text-slate-400 pl-4">
+              <p className="text-slate-600 dark:text-slate-400 pl-4 leading-normal">
                 {selectedMedicine.dosage}
               </p>
             </div>
 
-            {/* Side Effects / Warnings */}
+            {/* Warnings */}
             <div className="text-xs space-y-1">
-              <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
-                <AlertTriangle size={13} className="text-amber-500" /> Possible Side Effects:
+              <span className="font-medium text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                <AlertTriangle size={12} className="text-amber-500" /> Precautionary notes
               </span>
-              <p className="text-slate-600 dark:text-slate-400 pl-4">
-                {selectedMedicine.sideEffects || 'Well tolerated under recommended dosage.'}
+              <p className="text-slate-600 dark:text-slate-400 pl-4 leading-normal">
+                {selectedMedicine.sideEffects || 'Consult pharmacist if symptoms persist.'}
               </p>
             </div>
 
             {/* Pricing and Cart Stepper */}
             <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-slate-900 dark:text-white">
+                <div className="flex items-baseline gap-2 font-mono tabular-nums">
+                  <span className="text-xl font-semibold text-slate-900 dark:text-white">
                     ₹{selectedMedicine.price}
                   </span>
                   {selectedMedicine.mrp > selectedMedicine.price && (
-                    <span className="text-sm text-slate-400 line-through">
+                    <span className="text-xs text-slate-400 line-through">
                       ₹{selectedMedicine.mrp}
                     </span>
                   )}
-                  <span className="text-xs font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950 px-2 py-0.5 rounded">
-                    {selectedMedicine.discount}% OFF
-                  </span>
                 </div>
-                <p className="text-[11px] text-slate-400">Includes all taxes & cold-chain packing</p>
+                <p className="text-[10px] text-slate-400">Inclusive of GST</p>
               </div>
 
               {qty === 0 ? (
                 <button
                   onClick={() => addToCart(selectedMedicine)}
-                  className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-lg shadow-teal-600/30 transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-medium text-xs transition-colors flex items-center gap-1.5"
                 >
-                  <Plus size={16} /> Add to Cart
+                  <Plus size={14} /> Add to cart
                 </button>
               ) : (
-                <div className="flex items-center rounded-xl bg-teal-600 text-white font-bold text-sm shadow-md overflow-hidden">
+                <div className="flex items-center rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-mono font-medium overflow-hidden tabular-nums">
                   <button
                     onClick={() => updateQuantity(selectedMedicine._id, -1)}
-                    className="px-3 py-2 hover:bg-teal-700 transition-colors"
+                    className="px-2.5 py-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                   >
-                    <Minus size={15} />
+                    <Minus size={13} />
                   </button>
                   <span className="px-3 select-none">{qty}</span>
                   <button
                     onClick={() => updateQuantity(selectedMedicine._id, 1)}
-                    className="px-3 py-2 hover:bg-teal-700 transition-colors"
+                    className="px-2.5 py-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                   >
-                    <Plus size={15} />
+                    <Plus size={13} />
                   </button>
                 </div>
               )}

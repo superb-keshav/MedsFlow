@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStore } from '../context/StoreContext';
 import { categories } from '../data/healthData';
-import { Zap, Sparkles, Filter } from 'lucide-react';
+import { Filter, Percent } from 'lucide-react';
 
 export const CategoryPills = () => {
   const {
@@ -14,19 +14,23 @@ export const CategoryPills = () => {
   } = useStore();
 
   const filterTabs = [
-    { id: 'all', label: 'All Items', icon: null },
-    { id: 'express', label: '⚡ Fast Dispatch', icon: Zap },
-    { id: 'discount', label: 'Top Offers (>25% Off)', icon: Sparkles },
+    { id: 'all', label: 'All items', icon: null },
+    { id: 'express', label: 'In stock', icon: null },
+    { id: 'discount', label: 'Offers > 25%', icon: Percent },
   ];
 
   return (
-    <section className="py-2.5 sm:py-3 sticky top-[108px] md:top-[74px] z-30 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
-      <div className="app-container space-y-2 sm:space-y-3">
+    <section className="py-3 sticky top-[106px] md:top-[69px] z-30 bg-slate-50/95 dark:bg-[#0b0f17]/95 backdrop-blur-xs border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+      <div className="app-container space-y-2.5">
         
-        {/* Category Carousel Pills */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
+        {/* Horizontal Category Row */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
+            const count = cat.id === 'all'
+              ? medicines.length
+              : medicines.filter((m) => m.category === cat.id).length;
+
             return (
               <button
                 key={cat.id}
@@ -34,34 +38,32 @@ export const CategoryPills = () => {
                   setSelectedCategory(cat.id);
                   setSearchQuery('');
                 }}
-                className={`flex-shrink-0 flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors ${
                   isSelected
-                    ? 'bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-[1.02]'
-                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-teal-400 hover:text-teal-600 dark:hover:text-teal-400'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-medium'
+                    : 'bg-white dark:bg-[#121824] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 font-normal'
                 }`}
               >
                 <span>{cat.name}</span>
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                  className={`text-[10px] font-mono px-1 rounded tabular-nums ${
                     isSelected
-                      ? 'bg-white/20 text-white'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                      ? 'text-slate-300 dark:text-slate-600'
+                      : 'text-slate-400 dark:text-slate-500'
                   }`}
                 >
-                  {cat.id === 'all'
-                    ? medicines.length
-                    : medicines.filter((m) => m.category === cat.id).length}
+                  {count}
                 </span>
               </button>
             );
           })}
         </div>
 
-        {/* Quick Filter Badges Row */}
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-            <span className="text-[11px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
-              <Filter size={11} /> Filter:
+        {/* Filter and Count Summary Row */}
+        <div className="flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="text-slate-400 font-medium flex items-center gap-1">
+              <Filter size={12} /> Filter:
             </span>
             {filterTabs.map((tab) => {
               const isActive = activeFilter === tab.id;
@@ -70,28 +72,26 @@ export const CategoryPills = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveFilter(tab.id)}
-                  className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-2.5 py-1 rounded-md text-xs font-normal transition-colors flex items-center gap-1 ${
                     isActive
-                      ? 'bg-teal-100 dark:bg-teal-950/80 text-teal-900 dark:text-teal-200 border border-teal-400/40 font-bold'
-                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                      ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white font-medium'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  {Icon && <Icon size={12} className={isActive ? 'text-teal-600 dark:text-teal-400' : ''} />}
+                  {Icon && <Icon size={11} />}
                   <span>{tab.label}</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
-            Showing <strong className="text-slate-800 dark:text-white">
-              {medicines.filter((m) => {
-                if (selectedCategory !== 'all' && m.category !== selectedCategory) return false;
-                if (activeFilter === 'discount') return m.discount >= 25;
-                if (activeFilter === 'express') return m.expressDelivery;
-                return true;
-              }).length}
-            </strong> medicines
+          <div className="text-slate-500 dark:text-slate-400 font-mono text-[11px] tabular-nums">
+            {medicines.filter((m) => {
+              if (selectedCategory !== 'all' && m.category !== selectedCategory) return false;
+              if (activeFilter === 'discount') return m.discount >= 25;
+              if (activeFilter === 'express') return m.expressDelivery;
+              return true;
+            }).length} items listed
           </div>
         </div>
 

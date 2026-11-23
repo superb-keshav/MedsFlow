@@ -11,7 +11,6 @@ import {
   Database,
   Moon,
   Sun,
-  Sparkles,
   ShieldCheck,
   HeartPulse,
   ChevronRight,
@@ -55,7 +54,7 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Prevent background body scroll when mobile drawer is open
+  // Prevent background scroll when mobile drawer is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -67,79 +66,75 @@ export const Navbar = () => {
     };
   }, [isMobileMenuOpen]);
 
-  const trendingSearches = ['Dolo 650', 'Paracetamol', 'Vitamin C', 'Azithromycin', 'Insulin', 'Pantoprazole'];
+  const trendingSearches = ['Paracetamol', 'Dolo 650', 'Vitamin C', 'Azithromycin', 'Metformin', 'Pantoprazole'];
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 shadow-xs transition-colors">
+      <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#121824] border-b border-slate-200 dark:border-slate-800 transition-colors">
         
-        {/* Top Announcement Bar (18m express removed) */}
-        <div className="bg-gradient-to-r from-teal-900 via-teal-800 to-emerald-900 text-white text-[11px] py-1.5 px-3 shadow-inner">
-          <div className="app-container flex items-center justify-between flex-wrap gap-1">
+        {/* Top Quiet Meta Bar */}
+        <div className="bg-slate-50 dark:bg-[#0b0f17] border-b border-slate-200/60 dark:border-slate-800/60 text-slate-600 dark:text-slate-400 text-xs py-1.5 px-4">
+          <div className="app-container flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="beacon-dot"></span>
-              <span className="font-semibold text-emerald-300">100% GENUINE MEDICINES &bull; VERIFIED PHARMACY</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">Verified retail pharmacy license #DL-20B-18942</span>
             </div>
-            <div className="hidden sm:flex items-center gap-3 text-teal-200 text-[11px]">
+            <div className="hidden sm:flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
               <span className="flex items-center gap-1">
-                <ShieldCheck size={12} className="text-teal-300" /> Cold-Chain Certified
+                <ShieldCheck size={13} className="text-teal-600 dark:text-teal-400" /> Cold-chain verified
               </span>
-              <span>&bull;</span>
-              <span>Doctor Consultation Available</span>
+              <span>•</span>
+              <span>Pharmacist helpline: +91 98765 43210</span>
             </div>
           </div>
         </div>
 
         {/* Main Navbar Row */}
-        <div className="app-container py-2.5 sm:py-3">
-          
-          {/* Top Bar for Desktop and Mobile */}
-          <div className="flex items-center justify-between gap-2 sm:gap-4 md:gap-6">
+        <div className="app-container py-3">
+          <div className="flex items-center justify-between gap-4">
             
-            {/* Left Section: 3-Bars Mobile Hamburger + Logo + Desktop Location */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {/* Left: Hamburger (Mobile) + Brand Wordmark + Location */}
+            <div className="flex items-center gap-3 flex-shrink-0">
               
-              {/* 3-Bars Hamburger Button (Mobile Only) */}
+              {/* Mobile 3-Bars Menu */}
               <button
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="md:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors focus:outline-none"
-                aria-label="Open Navigation Menu"
+                className="md:hidden p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                aria-label="Open navigation menu"
               >
-                <Menu size={20} />
+                <Menu size={18} />
               </button>
 
-              {/* Logo */}
+              {/* Flat Wordmark Logo */}
               <a href="#" className="flex items-center gap-2 group">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-teal-600 via-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-600/30 group-hover:scale-105 transition-transform">
-                  <HeartPulse size={20} />
+                <div className="w-8 h-8 rounded-lg bg-teal-700 text-white flex items-center justify-center">
+                  <HeartPulse size={18} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg sm:text-xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
-                    Meds<span className="text-teal-600 dark:text-teal-400">Flow</span>
+                  <span className="text-base font-semibold text-slate-900 dark:text-white leading-none tracking-tight">
+                    MedsFlow
                   </span>
-                  <span className="text-[9px] font-bold text-teal-600 dark:text-teal-400 tracking-wider uppercase leading-tight mt-0.5">
-                    Online Pharmacy
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
+                    Dispensary & Health
                   </span>
                 </div>
               </a>
 
-              {/* Pincode & Delivery Selector (Desktop / Tablet Only) */}
+              {/* Delivery Zone Selector (Desktop) */}
               <button
                 onClick={() => setIsPincodeModalOpen(true)}
                 className="hidden lg:flex items-center gap-2 pl-3 ml-2 border-l border-slate-200 dark:border-slate-800 text-left hover:opacity-80 transition-opacity"
               >
-                <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
-                  <MapPin size={15} />
-                </div>
-                <div className="max-w-[130px]">
+                <MapPin size={15} className="text-slate-500 dark:text-slate-400 flex-shrink-0" />
+                <div className="max-w-[140px]">
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono">
+                    <span className="text-xs font-medium text-slate-800 dark:text-slate-200 font-mono">
                       {pincode}
                     </span>
-                    <span className="text-[10px] text-teal-600 font-extrabold uppercase">Change</span>
+                    <span className="text-[10px] text-teal-600 dark:text-teal-400 font-medium">Change</span>
                   </div>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
                     {locationName}
                   </p>
                 </div>
@@ -147,40 +142,39 @@ export const Navbar = () => {
 
             </div>
 
-            {/* Center Section: Desktop Omni-Search Bar */}
+            {/* Center: Omni-Search Bar (Desktop) */}
             <div ref={searchRef} className="hidden md:block flex-1 max-w-xl relative">
-              <div className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border bg-slate-50/50 dark:bg-slate-900/80 transition-all duration-200 ${
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border bg-slate-50/70 dark:bg-slate-900/60 transition-colors ${
                 isSearchFocused
-                  ? 'border-teal-500 shadow-md shadow-teal-500/10 ring-2 ring-teal-500/20 bg-white dark:bg-slate-900'
-                  : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                  ? 'border-teal-600 bg-white dark:bg-slate-900 ring-1 ring-teal-600/30'
+                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}>
-                <Search size={18} className="text-teal-600 dark:text-teal-400 flex-shrink-0" />
+                <Search size={16} className="text-slate-400 flex-shrink-0" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  placeholder="Search medicines, salt composition (e.g. Paracetamol)..."
-                  className="w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium focus:outline-none"
+                  placeholder="Search medicines, salts, or conditions"
+                  className="w-full bg-transparent text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 font-normal focus:outline-none"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                    className="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                   >
-                    <X size={15} />
+                    <X size={14} />
                   </button>
                 )}
               </div>
 
-              {/* Live Search Suggestions Dropdown */}
+              {/* Search Suggestions Dropdown */}
               {isSearchFocused && (
-                <div className="absolute top-full left-0 right-0 mt-2 glass-panel rounded-2xl shadow-xl p-3 z-50 border border-slate-200 dark:border-slate-700 modal-animate-in">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 px-2 flex items-center justify-between">
-                    <span>Trending Searches</span>
-                    <Sparkles size={12} className="text-amber-500" />
+                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-[#161922] rounded-xl shadow-lg p-3 z-50 border border-slate-200 dark:border-slate-800">
+                  <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-2 px-1">
+                    Trending queries
                   </div>
-                  <div className="flex flex-wrap gap-1.5 mb-3 px-1">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
                     {trendingSearches.map((term) => (
                       <button
                         key={term}
@@ -188,7 +182,7 @@ export const Navbar = () => {
                           setSearchQuery(term);
                           setIsSearchFocused(false);
                         }}
-                        className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-teal-50 hover:text-teal-700 dark:hover:bg-teal-900/40 dark:hover:text-teal-300 transition-colors font-medium"
+                        className="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                       >
                         {term}
                       </button>
@@ -197,8 +191,8 @@ export const Navbar = () => {
 
                   {searchQuery.trim().length > 0 && (
                     <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5 px-2">
-                        Matching Results
+                      <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1 px-1">
+                        Catalog matches
                       </div>
                       <div className="max-h-48 overflow-y-auto space-y-1">
                         {medicines
@@ -215,18 +209,18 @@ export const Navbar = () => {
                                 setSearchQuery(med.name);
                                 setIsSearchFocused(false);
                               }}
-                              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-sm"
+                              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-xs"
                             >
                               <div>
-                                <p className="font-semibold text-slate-800 dark:text-slate-200 text-xs">
+                                <p className="font-medium text-slate-900 dark:text-slate-100">
                                   {med.name}
                                 </p>
-                                <p className="text-[11px] text-teal-600 dark:text-teal-400">
+                                <p className="text-[11px] text-slate-500">
                                   {med.salt || med.disease}
                                 </p>
                               </div>
-                              <span className="text-xs font-bold text-slate-900 dark:text-white">
-                                &#8377;{med.price}
+                              <span className="font-mono text-xs text-slate-900 dark:text-white tabular-nums">
+                                ₹{med.price}
                               </span>
                             </div>
                           ))}
@@ -237,79 +231,77 @@ export const Navbar = () => {
               )}
             </div>
 
-            {/* Right CTAs */}
-            <div className="flex items-center gap-1.5 sm:gap-2.5">
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2">
               
-              {/* Doctor Consultation CTA (Desktop) */}
+              {/* Doctor Consultation */}
               <button
                 onClick={() => setIsDoctorConsultOpen(true)}
-                className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 transition-all hover:scale-105 active:scale-95 flex-shrink-0"
-                title="Consult Doctor (Fee: &#8377;199)"
+                className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-medium transition-colors"
               >
-                <Stethoscope size={15} />
-                <span>Consult Doctor (&#8377;199)</span>
+                <Stethoscope size={15} className="text-teal-600 dark:text-teal-400" />
+                <span>Consult doctor (₹199)</span>
               </button>
 
-              {/* Admin Button (Desktop) */}
+              {/* Admin Console Key */}
               <button
                 onClick={() => setIsAdminOpen(true)}
-                className={`hidden sm:flex p-2 rounded-xl border transition-all ${
+                className={`p-2 rounded-lg border transition-colors ${
                   backendConnected
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300'
-                    : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
+                    ? 'border-emerald-300 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300'
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                 }`}
-                title={backendConnected ? 'Backend Connected &bull; Manage Inventory' : 'Store Admin Dashboard'}
+                title={backendConnected ? 'Database connected • Admin' : 'Store Admin'}
               >
-                <Database size={17} />
+                <Database size={16} />
               </button>
 
-              {/* Dark Mode Toggle */}
+              {/* Theme Toggle */}
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
-                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+                title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
-                {darkMode ? <Sun size={17} className="text-amber-400" /> : <Moon size={17} />}
+                {darkMode ? <Sun size={16} /> : <Moon size={16} />}
               </button>
 
               {/* Cart Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white shadow-md shadow-teal-600/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium transition-colors"
               >
-                <div className="relative">
-                  <ShoppingBag size={18} />
+                <div className="relative flex items-center">
+                  <ShoppingBag size={16} />
                   {cartCount > 0 && (
-                    <span className="absolute -top-2.5 -right-2.5 bg-rose-500 text-white text-[10px] font-black w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm animate-pulse">
-                      {cartCount}
+                    <span className="ml-1.5 font-mono text-[11px] font-semibold tabular-nums">
+                      ({cartCount})
                     </span>
                   )}
                 </div>
-                <div className="hidden sm:block text-left pl-1 border-l border-teal-500/40">
-                  <p className="text-[10px] font-medium leading-none text-teal-100">Cart</p>
-                  <p className="text-xs font-bold leading-tight mt-0.5">&#8377;{cartSubtotal}</p>
-                </div>
+                <span className="hidden sm:inline pl-1 border-l border-teal-600 font-mono tabular-nums">
+                  ₹{cartSubtotal}
+                </span>
               </button>
 
             </div>
 
           </div>
 
-          {/* Mobile Full-Width Search Bar */}
+          {/* Mobile Search Bar Row */}
           <div className="md:hidden mt-2.5">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
-              <Search size={16} className="text-teal-600 dark:text-teal-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
+              <Search size={15} className="text-slate-400 flex-shrink-0" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search medicines or composition..."
-                className="w-full bg-transparent text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium focus:outline-none"
+                placeholder="Search medicines or salts"
+                className="w-full bg-transparent text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 font-normal focus:outline-none"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  className="p-1 text-slate-400"
                 >
                   <X size={14} />
                 </button>
@@ -321,139 +313,124 @@ export const Navbar = () => {
       </header>
 
       {/* ========================================================================= */}
-      {/* LEFT-HAND SIDE MOBILE DRAWER (Off-Canvas Navigation)                      */}
+      {/* LEFT-HAND SIDE MOBILE DRAWER                                              */}
       {/* ========================================================================= */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex">
           
-          {/* Backdrop Blur Overlay */}
+          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-300"
+            className="fixed inset-0 bg-slate-950/50 backdrop-blur-xs transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
-          {/* Slide-out Sidebar Panel on Left */}
-          <aside className="relative w-80 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl z-50 flex flex-col justify-between overflow-y-auto border-r border-slate-200 dark:border-slate-800 transition-all duration-300 modal-animate-in">
+          {/* Panel */}
+          <aside className="relative w-72 max-w-[80vw] bg-white dark:bg-[#121824] shadow-xl z-50 flex flex-col justify-between overflow-y-auto border-r border-slate-200 dark:border-slate-800">
             
-            {/* Drawer Header */}
+            {/* Header */}
             <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md">
-                  <HeartPulse size={20} />
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-teal-700 text-white flex items-center justify-center">
+                  <HeartPulse size={16} />
                 </div>
-                <div>
-                  <h3 className="font-black text-slate-900 dark:text-white text-base leading-none">MedsFlow</h3>
-                  <p className="text-[10px] text-teal-600 dark:text-teal-400 font-bold uppercase tracking-wider mt-0.5">
-                    Digital Pharmacy
-                  </p>
-                </div>
+                <span className="font-semibold text-slate-900 dark:text-white text-sm">MedsFlow</span>
               </div>
               <button
                 type="button"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                aria-label="Close Navigation Menu"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
 
-            {/* Drawer Body Options */}
+            {/* Body */}
             <div className="p-4 space-y-4 flex-1">
               
-              {/* Delivery Location / Pincode Card */}
+              {/* Location Card */}
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   setIsPincodeModalOpen(true);
                 }}
-                className="w-full text-left p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 hover:border-teal-500/50 transition-all flex items-center justify-between"
+                className="w-full text-left p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 hover:border-slate-300 flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
-                    <MapPin size={16} />
-                  </div>
+                  <MapPin size={15} className="text-slate-500" />
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-slate-400">Delivery Pincode</p>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white font-mono">{pincode}</p>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[150px]">{locationName}</p>
+                    <p className="text-[10px] text-slate-400 font-medium">Delivery location</p>
+                    <p className="text-xs font-medium text-slate-900 dark:text-white font-mono">{pincode}</p>
+                    <p className="text-[11px] text-slate-500 truncate max-w-[150px]">{locationName}</p>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-slate-400" />
+                <ChevronRight size={15} className="text-slate-400" />
               </button>
 
-              {/* Consult Doctor CTA */}
+              {/* Consult Doctor Link */}
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   setIsDoctorConsultOpen(true);
                 }}
-                className="w-full text-left p-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-lg shadow-teal-600/20 hover:from-teal-700 hover:to-emerald-700 transition-all flex items-center justify-between"
+                className="w-full text-left p-3 rounded-lg border border-teal-600/30 bg-teal-50/50 dark:bg-teal-950/20 text-slate-900 dark:text-white flex items-center justify-between hover:bg-teal-50 transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-                    <Stethoscope size={18} />
-                  </div>
+                  <Stethoscope size={16} className="text-teal-600 dark:text-teal-400" />
                   <div>
-                    <p className="text-xs font-black">Consult Doctor</p>
-                    <p className="text-[10px] text-teal-100">Verified Specialists &bull; Fee: &#8377;199</p>
+                    <p className="text-xs font-medium">Consult doctor</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">General Physician &bull; Fee: ₹199</p>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-teal-200" />
+                <ChevronRight size={15} className="text-slate-400" />
               </button>
 
-              {/* Main Actions List */}
+              {/* Navigation Items */}
               <div className="space-y-1 pt-1">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2 pb-1">
-                  Menu Options
+                <p className="text-[11px] font-medium text-slate-400 px-2 pb-1">
+                  Navigation
                 </p>
 
-                {/* Admin Management Option */}
                 <button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     setIsAdminOpen(true);
                   }}
-                  className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors"
+                  className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Database size={16} className="text-teal-600 dark:text-teal-400" />
-                    <span>Store Admin Console</span>
+                  <div className="flex items-center gap-2">
+                    <Database size={15} className="text-slate-500" />
+                    <span>Admin inventory console</span>
                   </div>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold ${
-                    backendConnected
-                      ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300'
-                      : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                    backendConnected ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-600'
                   }`}>
-                    {backendConnected ? 'Live' : 'Admin'}
+                    {backendConnected ? 'Live' : 'Local'}
                   </span>
                 </button>
 
-                {/* Diagnostic Tests */}
                 <a
                   href="#lab-tests"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors"
+                  className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium transition-colors"
                 >
-                  <Activity size={16} className="text-emerald-500" />
-                  <span>Book Lab Tests & Checkups</span>
+                  <Activity size={15} className="text-slate-500" />
+                  <span>Diagnostic lab packages</span>
                 </a>
 
-                {/* Catalog Navigation */}
                 <a
                   href="#catalog"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors"
+                  className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium transition-colors"
                 >
-                  <Pill size={16} className="text-teal-500" />
-                  <span>Browse All Medicines</span>
+                  <Pill size={15} className="text-slate-500" />
+                  <span>Medicine catalog</span>
                 </a>
               </div>
 
-              {/* Medicine Categories In Sidebar */}
+              {/* Categories */}
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2 pb-1.5">
-                  Medicine Categories
+                <p className="text-[11px] font-medium text-slate-400 px-2 pb-1.5">
+                  Categories
                 </p>
                 <div className="grid grid-cols-2 gap-1.5">
                   {categories.map((cat) => (
@@ -465,10 +442,10 @@ export const Navbar = () => {
                         const el = document.getElementById('catalog');
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className={`p-2 rounded-xl text-left text-[11px] font-medium transition-colors ${
+                      className={`p-2 rounded-lg text-left text-xs font-normal transition-colors ${
                         selectedCategory === cat.id
-                          ? 'bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 font-bold border border-teal-300 dark:border-teal-700'
-                          : 'bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          ? 'bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-medium border border-teal-200 dark:border-teal-800'
+                          : 'bg-slate-50 dark:bg-slate-800/40 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
                     >
                       {cat.name}
@@ -479,15 +456,10 @@ export const Navbar = () => {
 
             </div>
 
-            {/* Drawer Footer */}
-            <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-2">
-              <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-                <CheckCircle2 size={14} className="text-emerald-500" />
-                <span>100% Genuine Pharmacy Certified</span>
-              </div>
-              <p className="text-[10px] text-slate-400">
-                MedsFlow Digital Healthcare Platform
-              </p>
+            {/* Footer */}
+            <div className="p-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 flex items-center gap-2">
+              <CheckCircle2 size={13} className="text-teal-600" />
+              <span>Licensed pharmacy stock</span>
             </div>
 
           </aside>
